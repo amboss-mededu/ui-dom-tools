@@ -4,7 +4,7 @@ var expect = chai.expect;
 
 var bboxDiff = domTools.bboxDiff;
 
-describe('climb', function(){
+describe('bbox diff', function(){
 
   var scope, start;
 
@@ -42,6 +42,28 @@ describe('climb', function(){
     );
 
     expect(offsetVisible.visible).to.equal(false);
+
+  });
+
+  it('should accept an existing bbox', function(){
+
+    var offsetExisting = bboxDiff(
+      scope.children[0], scope.getBoundingClientRect()
+    );
+
+    expect(offsetExisting.top).to.equal(3);
+    expect(offsetExisting.left).to.equal(0);
+
+  });
+
+  it('should query only a subset of keys if provided', function(){
+
+    var offsetTop = bboxDiff(
+      scope.children[0], scope.getBoundingClientRect(), ['top']
+    );
+
+    expect(offsetTop.top).to.equal(3);
+    expect(offsetTop.left).to.be.undefined;
 
   });
 

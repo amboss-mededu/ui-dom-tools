@@ -106,19 +106,21 @@ module.exports =
 	  value: true
 	});
 
-	exports.default = function (a, b) {
+	exports.default = function (a, b, keys) {
 
 	  // do the hard math here
 	  var aBox = a.getBoundingClientRect();
 
 	  var result = { visible: true };
 
+	  var ks = keys && keys.length ? keys : boxKeys;
+
 	  // if this has a null BBox, it's not even visible
 	  if (aBox.height === 0 && aBox.width === 0) result.visible = false;
 
-	  var bBox = b.getBoundingClientRect();
+	  var bBox = b.nodeType ? b.getBoundingClientRect() : b;
 
-	  boxKeys.forEach(function (k) {
+	  ks.forEach(function (k) {
 	    result[k] = aBox[k] - bBox[k];
 	  });
 
@@ -128,9 +130,10 @@ module.exports =
 	/**
 	 * Returns the relative offsets up to the limit node
 	 *
-	 * @param {Element} a
-	 * @param {Element} b
-	 * @returns {{top: (number|Number), left: (Number|number)}}
+	 * @param {Element} a – the target, whose visibility is also checked
+	 * @param {Element}|{Object} b – the referent, which can also be an existing bbox.
+	 * @param {Array} [keys] - a set of box keys to query instead of the full set.
+	 * @returns {Object} diffBox
 	 */
 
 	var boxKeys = ['bottom', 'height', 'left', 'right', 'top', 'width'];
