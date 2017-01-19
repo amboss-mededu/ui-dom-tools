@@ -1,6 +1,6 @@
 {
   "name": "dom-tools",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A set of tools for working with the browser's DOM",
   "repository": "ssh://git.medicuja.de/var/lib/git/dom-tools.git",
   "main": "./dist/index.js",
