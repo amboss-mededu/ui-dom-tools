@@ -50,15 +50,20 @@ module.exports =
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.climb = undefined;
+	exports.bboxDiff = exports.climb = undefined;
 
 	var _climb = __webpack_require__(1);
 
 	var _climb2 = _interopRequireDefault(_climb);
 
+	var _bboxDiff = __webpack_require__(2);
+
+	var _bboxDiff2 = _interopRequireDefault(_bboxDiff);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.climb = _climb2.default;
+	exports.bboxDiff = _bboxDiff2.default;
 
 /***/ },
 /* 1 */
@@ -74,12 +79,14 @@ module.exports =
 
 	  if (!start) return null;
 
-	  var cursor = start,
-	      lim = limit || document.body;
+	  var cursor = start;
+
+	  var lim = limit || document.body;
 
 	  while (cursor !== lim) {
-	    if (cursor === document.body) break;
-	    if (predicate(cursor)) {
+	    if (cursor === document.body) {
+	      break;
+	    } else if (predicate(cursor)) {
 	      return cursor;
 	    } else {
 	      cursor = cursor.parentNode;
@@ -89,16 +96,46 @@ module.exports =
 	  return null;
 	};
 
-	; /**
-	   * Climbs up the DOM up to but not including the limit element (or
-	   * `body` if not specified) looking for and returning the first
-	   * element that passes the predicate, or `null` if nothing does.
-	   *
-	   * @param {HTMLElement} start
-	   * @param {function} predicate
-	   * @param {HTMLElement} limit
-	   * @returns {*}
-	   */
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	exports.default = function (a, b) {
+
+	  // do the hard math here
+	  var aBox = a.getBoundingClientRect();
+
+	  var result = { visible: true };
+
+	  // if this has a null BBox, it's not even visible
+	  if (aBox.height === 0 && aBox.width === 0) result.visible = false;
+
+	  var bBox = b.getBoundingClientRect();
+
+	  boxKeys.forEach(function (k) {
+	    result[k] = aBox[k] - bBox[k];
+	  });
+
+	  return result;
+	};
+
+	/**
+	 * Returns the relative offsets up to the limit node
+	 *
+	 * @param {Element} a
+	 * @param {Element} b
+	 * @returns {{top: (number|Number), left: (Number|number)}}
+	 */
+
+	var boxKeys = ['bottom', 'height', 'left', 'right', 'top', 'width'];
+
+	;
 
 /***/ }
 /******/ ]);
